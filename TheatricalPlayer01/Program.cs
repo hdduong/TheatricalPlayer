@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -43,8 +44,6 @@ namespace TheatricalPlayer01
 
             foreach (var perf in invoice.Performances)
             {
-                var thisAmount = AmountFor(perf, PlayFor(perf, plays));
-
                 // add volume credits
                 volumeCredits += Math.Max(perf.Audience - 30, 0);
 
@@ -54,8 +53,8 @@ namespace TheatricalPlayer01
                     volumeCredits += Math.Floor(perf.Audience / 5.0);
                 }
 
-                result += $"    { PlayFor(perf, plays).Name}: {(thisAmount / 100):C2} ({perf.Audience} seats)\n";
-                totalAmount += thisAmount;
+                result += $"    { PlayFor(perf, plays).Name}: {(AmountFor(perf, plays) / 100):C2} ({perf.Audience} seats)\n";
+                totalAmount += AmountFor(perf, plays);
             }
 
             result += $"Amount owed is {(totalAmount / 100):C2}\n";
@@ -68,10 +67,10 @@ namespace TheatricalPlayer01
             return plays[aPerformance.PlayId];
         }
 
-        public static int AmountFor(Performance aPerformance, Play play)
+        public static int AmountFor(Performance aPerformance, Dictionary<string, Play> plays)
         {
             var result = 0;
-            switch (play.Type)
+            switch (PlayFor(aPerformance, plays).Type)
             {
                 case "tragedy":
                     result = 40000;
@@ -89,7 +88,7 @@ namespace TheatricalPlayer01
                     result += 300 * aPerformance.Audience;
                     break;
                 default:
-                    throw new Exception($"Unknown {play.Type} ");
+                    throw new Exception($"Unknown {PlayFor(aPerformance, plays).Type} ");
             }
 
             return result;

@@ -7,7 +7,7 @@ using TheatricalPlayer01.Models;
 
 namespace TheatricalPlayer01
 {
-    class Program
+    public class Program
     {
         private static string _dataFolder = Path.Combine(Directory.GetCurrentDirectory(), "Data");
         static void Main(string[] args)

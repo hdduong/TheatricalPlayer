@@ -69,6 +69,19 @@ namespace TheatricalPlayer01.Test
             expectedResult += "Amount owed is $1,730.00\n";
             expectedResult += "You earned 47 credits\n";
             Assert.AreEqual(expectedResult, main);
+
+            var mainHtml = Program.StatementHtml(new StatementData
+            {
+                Invoice = invoice,
+                Plays = dicPlay
+            });
+            var expectedHtml = "<h1>Statement for BigCo</h1>\n";
+            expectedHtml += "    Hamlet: $650.00 (55 seats)\n";
+            expectedHtml += "    As You Like It: $580.00 (35 seats)\n";
+            expectedHtml += "    Osthello: $500.00 (40 seats)\n";
+            expectedHtml += "Amount owed is $1,730.00\n";
+            expectedHtml += "You earned 47 credits\n";
+            Assert.AreEqual(expectedHtml, mainHtml);
         }
     }
 }

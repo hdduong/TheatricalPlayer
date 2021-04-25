@@ -44,81 +44,37 @@ namespace TheatricalPlayer01
             return RenderPlainText(data);
         }
 
+        public static string StatementHtml(StatementData data)
+        {
+            return RenderHtml(data);
+        }
+
         public static string RenderPlainText(StatementData data)
         {
-            var result = $"Statement for {data.Invoice.Customer}\n";
+            var result = $"Statement for {data.GetCustomer()}\n";
            
-            foreach (var perf in data.Invoice.Performances)
+            foreach (var perf in data.GetPerformances())
             {
-                result += $"    { PlayFor(perf, data.Plays).Name}: {(AmountFor(perf, data.Plays) / 100):C2} ({perf.Audience} seats)\n";
+                result += $"    {perf.PlayFor(data.Plays).Name}: {(data.AmountFor(perf) / 100):C2} ({perf.Audience} seats)\n";
             }
 
-            result += $"Amount owed is {(TotalAmountFor(data) / 100):C2}\n";
-            result += $"You earned {TotalVolumeCreditsFor(data)} credits\n";
+            result += $"Amount owed is {(data.TotalAmountFor() / 100):C2}\n";
+            result += $"You earned {data.TotalVolumeCreditsFor()} credits\n";
             return result;
         }
 
-        public static double TotalAmountFor(StatementData data)
+        public static string RenderHtml(StatementData data)
         {
-            var result = 0.0;
-            foreach (var perf in data.Invoice.Performances)
-            {
-                result += AmountFor(perf, data.Plays);
-            }
-            return result;
-        }
+            var result = $"<h1>Statement for {data.GetCustomer()}</h1>\n";
 
-        public static double TotalVolumeCreditsFor(StatementData data)
-        {
-            var result = 0.0;
-            foreach (var perf in data.Invoice.Performances)
+            foreach (var perf in data.GetPerformances())
             {
-                result += VolumeCreditsFor(perf, data.Plays);
-            }
-            return result;
-        }
-
-        public static double VolumeCreditsFor(Performance aPerformance, Dictionary<string, Play> plays)
-        {
-            double result = Math.Max(aPerformance.Audience - 30, 0);
-            if (PlayFor(aPerformance, plays).Type.Equals("comedy", StringComparison.InvariantCultureIgnoreCase))
-            {
-                result += Math.Floor(aPerformance.Audience / 5.0);
-            }
-            return result;
-        }
-
-        public static Play PlayFor(Performance aPerformance, Dictionary<string, Play> plays)
-        {
-            return plays[aPerformance.PlayId];
-        }
-
-        public static int AmountFor(Performance aPerformance, Dictionary<string, Play> plays)
-        {
-            var result = 0;
-            switch (PlayFor(aPerformance, plays).Type)
-            {
-                case "tragedy":
-                    result = 40000;
-                    if (aPerformance.Audience > 30)
-                    {
-                        result += 1000 * (aPerformance.Audience - 30);
-                    }
-                    break;
-                case "comedy":
-                    result = 30000;
-                    if (aPerformance.Audience > 20)
-                    {
-                        result += 10000 + 500 * (aPerformance.Audience - 20);
-                    }
-                    result += 300 * aPerformance.Audience;
-                    break;
-                default:
-                    throw new Exception($"Unknown {PlayFor(aPerformance, plays).Type} ");
+                result += $"    {perf.PlayFor(data.Plays).Name}: {(data.AmountFor(perf) / 100):C2} ({perf.Audience} seats)\n";
             }
 
+            result += $"Amount owed is {(data.TotalAmountFor() / 100):C2}\n";
+            result += $"You earned {data.TotalVolumeCreditsFor()} credits\n";
             return result;
         }
-
     }
 }

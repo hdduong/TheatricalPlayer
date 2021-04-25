@@ -43,25 +43,29 @@ namespace TheatricalPlayer01
 
             foreach (var perf in invoice.Performances)
             {
-                var play = plays[perf.PlayId];
-                var thisAmount = AmountFor(perf, play);
+                var thisAmount = AmountFor(perf, PlayFor(perf, plays));
 
                 // add volume credits
                 volumeCredits += Math.Max(perf.Audience - 30, 0);
 
                 // ad extra credit for every ten comedy attendees
-                if (play.Type.Equals("comedy", StringComparison.InvariantCultureIgnoreCase))
+                if (PlayFor(perf, plays).Type.Equals("comedy", StringComparison.InvariantCultureIgnoreCase))
                 {
                     volumeCredits += Math.Floor(perf.Audience / 5.0);
                 }
 
-                result += $"    {play.Name}: {(thisAmount / 100):C2} ({perf.Audience} seats)\n";
+                result += $"    { PlayFor(perf, plays).Name}: {(thisAmount / 100):C2} ({perf.Audience} seats)\n";
                 totalAmount += thisAmount;
             }
 
             result += $"Amount owed is {(totalAmount / 100):C2}\n";
             result += $"You earned {volumeCredits} credits\n";
             return result;
+        }
+
+        public static Play PlayFor(Performance aPerformance, Dictionary<string, Play> plays)
+        {
+            return plays[aPerformance.PlayId];
         }
 
         public static int AmountFor(Performance aPerformance, Play play)

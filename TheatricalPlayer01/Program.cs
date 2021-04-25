@@ -25,7 +25,7 @@ namespace TheatricalPlayer01
             }
 
             var str = Statement(invoices.First(), dicPlay);
-
+            Console.Write(str);
         }
 
         private static T ReadFile<T>(string filePath)
@@ -44,28 +44,7 @@ namespace TheatricalPlayer01
             foreach (var perf in invoice.Performances)
             {
                 var play = plays[perf.PlayId];
-                var thisAmount = 0;
-
-                switch (play.Type)
-                {
-                    case "tragedy":
-                        thisAmount = 40000;
-                        if (perf.Audience > 30)
-                        {
-                            thisAmount += 1000 * (perf.Audience - 30);
-                        }
-                        break;
-                    case "comedy":
-                        thisAmount = 30000;
-                        if (perf.Audience > 20)
-                        {
-                            thisAmount += 10000 + 500 * (perf.Audience - 20);
-                        }
-                        thisAmount += 300 * perf.Audience;
-                        break;
-                    default:
-                        throw new Exception($"Unknown {play.Type} ");
-                }
+                var thisAmount = AmountFor(perf, play);
 
                 // add volume credits
                 volumeCredits += Math.Max(perf.Audience - 30, 0);
@@ -84,5 +63,33 @@ namespace TheatricalPlayer01
             result += $"You earned {volumeCredits} credits\n";
             return result;
         }
+
+        public static int AmountFor(Performance perf, Play play)
+        {
+            var result = 0;
+            switch (play.Type)
+            {
+                case "tragedy":
+                    result = 40000;
+                    if (perf.Audience > 30)
+                    {
+                        result += 1000 * (perf.Audience - 30);
+                    }
+                    break;
+                case "comedy":
+                    result = 30000;
+                    if (perf.Audience > 20)
+                    {
+                        result += 10000 + 500 * (perf.Audience - 20);
+                    }
+                    result += 300 * perf.Audience;
+                    break;
+                default:
+                    throw new Exception($"Unknown {play.Type} ");
+            }
+
+            return result;
+        }
+
     }
 }

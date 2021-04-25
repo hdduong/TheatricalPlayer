@@ -1,18 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TheatricalPlayer01.Models
+﻿namespace TheatricalPlayer01.Models
 {
-    public class TragedyCalculator
+    public class TragedyCalculator : PerformanceCalculator
     {
-        private readonly Performance _performance;
-
-        public TragedyCalculator(Performance performance)
+        public TragedyCalculator(Performance performance, Play play) : base(performance, play)
         {
-            _performance = performance;
         }
 
+        public new int GetAmount()
+        {
+            var result = 40000;
+            if (Performance.Audience > 30)
+            {
+                result += 1000 * (Performance.Audience - 30);
+            }
 
+            return result;
+        }
     }
 }

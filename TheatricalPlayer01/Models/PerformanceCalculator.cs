@@ -4,40 +4,26 @@ namespace TheatricalPlayer01.Models
 {
     public class PerformanceCalculator
     {
-        private readonly Performance _performance;
-        private readonly Play _play;
+        protected readonly Performance Performance;
+        protected readonly Play Play;
 
         public PerformanceCalculator(Performance performance, Play play)
         {
-            _performance = performance;
-            _play = play;
+            Performance = performance;
+            Play = play;
         }
 
         public int GetAmount()
         {
-            var result = 0;
-            switch (_play.Type)
+            switch (Play.Type)
             {
                 case "tragedy":
-                    result = 40000;
-                    if (_performance.Audience > 30)
-                    {
-                        result += 1000 * (_performance.Audience - 30);
-                    }
-                    break;
+                    return new TragedyCalculator(Performance, Play).GetAmount();
                 case "comedy":
-                    result = 30000;
-                    if (_performance.Audience > 20)
-                    {
-                        result += 10000 + 500 * (_performance.Audience - 20);
-                    }
-                    result += 300 * _performance.Audience;
-                    break;
+                    return new ComedyCalculator(Performance, Play).GetAmount();
                 default:
-                    throw new Exception($"Unknown {_play.Type} ");
+                    throw new Exception($"Unknown {Play.Type} ");
             }
-
-            return result;
         }
     }
 }

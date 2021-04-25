@@ -37,17 +37,25 @@ namespace TheatricalPlayer01
 
         public static string Statement(Invoice invoice, Dictionary<string, Play> plays)
         {
-            var totalAmount = 0.0;
             var result = $"Statement for {invoice.Customer}\n";
            
             foreach (var perf in invoice.Performances)
             {
                 result += $"    { PlayFor(perf, plays).Name}: {(AmountFor(perf, plays) / 100):C2} ({perf.Audience} seats)\n";
-                totalAmount += AmountFor(perf, plays);
             }
 
-            result += $"Amount owed is {(totalAmount / 100):C2}\n";
+            result += $"Amount owed is {(TotalAmountFor(invoice, plays) / 100):C2}\n";
             result += $"You earned {TotalVolumeCreditsFor(invoice, plays)} credits\n";
+            return result;
+        }
+
+        public static double TotalAmountFor(Invoice invoice, Dictionary<string, Play> plays)
+        {
+            var result = 0.0;
+            foreach (var perf in invoice.Performances)
+            {
+                result += AmountFor(perf, plays);
+            }
             return result;
         }
 

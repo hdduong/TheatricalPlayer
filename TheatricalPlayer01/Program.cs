@@ -55,7 +55,7 @@ namespace TheatricalPlayer01
            
             foreach (var perf in data.GetPerformances())
             {
-                result += $"    {perf.PlayFor(data.Plays).Name}: {(data.AmountFor(perf) / 100):C2} ({perf.Audience} seats)\n";
+                result += $"    {perf.PlayFor(data.Plays).Name}: {(new PerformanceCalculator(perf).GetAmount(perf.PlayFor(data.Plays)) / 100):C2} ({perf.Audience} seats)\n";
             }
 
             result += $"Amount owed is {(data.TotalAmountFor() / 100):C2}\n";
@@ -69,7 +69,7 @@ namespace TheatricalPlayer01
 
             foreach (var perf in data.GetPerformances())
             {
-                result += $"    {perf.PlayFor(data.Plays).Name}: {(data.AmountFor(perf) / 100):C2} ({perf.Audience} seats)\n";
+                result += $"    {perf.PlayFor(data.Plays).Name}: {(new PerformanceCalculator(perf).GetAmount(perf.PlayFor(data.Plays)) / 100):C2} ({perf.Audience} seats)\n";
             }
 
             result += $"Amount owed is {(data.TotalAmountFor() / 100):C2}\n";

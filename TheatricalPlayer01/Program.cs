@@ -64,25 +64,25 @@ namespace TheatricalPlayer01
             return result;
         }
 
-        public static int AmountFor(Performance perf, Play play)
+        public static int AmountFor(Performance aPerformance, Play play)
         {
             var result = 0;
             switch (play.Type)
             {
                 case "tragedy":
                     result = 40000;
-                    if (perf.Audience > 30)
+                    if (aPerformance.Audience > 30)
                     {
-                        result += 1000 * (perf.Audience - 30);
+                        result += 1000 * (aPerformance.Audience - 30);
                     }
                     break;
                 case "comedy":
                     result = 30000;
-                    if (perf.Audience > 20)
+                    if (aPerformance.Audience > 20)
                     {
-                        result += 10000 + 500 * (perf.Audience - 20);
+                        result += 10000 + 500 * (aPerformance.Audience - 20);
                     }
-                    result += 300 * perf.Audience;
+                    result += 300 * aPerformance.Audience;
                     break;
                 default:
                     throw new Exception($"Unknown {play.Type} ");

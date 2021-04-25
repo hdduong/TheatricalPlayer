@@ -46,14 +46,18 @@ namespace TheatricalPlayer01
                 totalAmount += AmountFor(perf, plays);
             }
 
-            var volumeCredits = 0.0;
+            result += $"Amount owed is {(totalAmount / 100):C2}\n";
+            result += $"You earned {TotalVolumeCreditsFor(invoice, plays)} credits\n";
+            return result;
+        }
+
+        public static double TotalVolumeCreditsFor(Invoice invoice, Dictionary<string, Play> plays)
+        {
+            var result = 0.0;
             foreach (var perf in invoice.Performances)
             {
-                volumeCredits += VolumeCreditsFor(perf, plays);
+                result += VolumeCreditsFor(perf, plays);
             }
-
-            result += $"Amount owed is {(totalAmount / 100):C2}\n";
-            result += $"You earned {volumeCredits} credits\n";
             return result;
         }
 

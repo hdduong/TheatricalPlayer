@@ -8,8 +8,7 @@ namespace TheatricalPlayer01.Models
     {
         public Invoice Invoice { get; set; }
         public Dictionary<string, Play> Plays { get; set; }
-        public PerformanceCalculator PerformanceCalculator { get; set; }
-
+        
         public string GetCustomer()
         {
             return Invoice.Customer;
@@ -25,7 +24,7 @@ namespace TheatricalPlayer01.Models
             var result = 0.0;
             foreach (var perf in Invoice.Performances)
             {
-                result += new PerformanceCalculator(perf).GetAmount(perf.PlayFor(Plays));
+                result += new PerformanceCalculator(perf, perf.PlayFor(Plays)).GetAmount();
             }
             return result;
         }

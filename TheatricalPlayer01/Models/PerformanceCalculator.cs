@@ -1,22 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace TheatricalPlayer01.Models
 {
     public class PerformanceCalculator
     {
         private readonly Performance _performance;
+        private readonly Play _play;
 
-        public PerformanceCalculator(Performance performance)
+        public PerformanceCalculator(Performance performance, Play play)
         {
             _performance = performance;
+            _play = play;
         }
 
-        public int GetAmount(Play play)
+        public int GetAmount()
         {
             var result = 0;
-            switch (play.Type)
+            switch (_play.Type)
             {
                 case "tragedy":
                     result = 40000;
@@ -34,7 +34,7 @@ namespace TheatricalPlayer01.Models
                     result += 300 * _performance.Audience;
                     break;
                 default:
-                    throw new Exception($"Unknown {play.Type} ");
+                    throw new Exception($"Unknown {_play.Type} ");
             }
 
             return result;

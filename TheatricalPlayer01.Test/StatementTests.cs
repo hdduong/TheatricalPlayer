@@ -56,7 +56,11 @@ namespace TheatricalPlayer01.Test
                 Type = "tragedy"
             });
             
-            var main = Program.Statement(invoice, dicPlay);
+            var main = Program.Statement(new StatementData
+            {
+                Invoice = invoice,
+                Plays = dicPlay
+            });
 
             var expectedResult = "Statement for BigCo\n";
             expectedResult += "    Hamlet: $650.00 (55 seats)\n";

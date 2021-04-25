@@ -25,7 +25,11 @@ namespace TheatricalPlayer01
                 dicPlay.Add(play.Id, play);
             }
 
-            var str = Statement(invoices.First(), dicPlay);
+            var str = Statement(new StatementData
+            {
+                Invoice = invoices.First(),
+                Plays = dicPlay
+            });
             Console.Write(str);
         }
 
@@ -35,36 +39,41 @@ namespace TheatricalPlayer01
             return JsonConvert.DeserializeObject<T>(json);
         }
 
-        public static string Statement(Invoice invoice, Dictionary<string, Play> plays)
+        public static string Statement(StatementData data)
         {
-            var result = $"Statement for {invoice.Customer}\n";
+            return RenderPlainText(data);
+        }
+
+        public static string RenderPlainText(StatementData data)
+        {
+            var result = $"Statement for {data.Invoice.Customer}\n";
            
-            foreach (var perf in invoice.Performances)
+            foreach (var perf in data.Invoice.Performances)
             {
-                result += $"    { PlayFor(perf, plays).Name}: {(AmountFor(perf, plays) / 100):C2} ({perf.Audience} seats)\n";
+                result += $"    { PlayFor(perf, data.Plays).Name}: {(AmountFor(perf, data.Plays) / 100):C2} ({perf.Audience} seats)\n";
             }
 
-            result += $"Amount owed is {(TotalAmountFor(invoice, plays) / 100):C2}\n";
-            result += $"You earned {TotalVolumeCreditsFor(invoice, plays)} credits\n";
+            result += $"Amount owed is {(TotalAmountFor(data) / 100):C2}\n";
+            result += $"You earned {TotalVolumeCreditsFor(data)} credits\n";
             return result;
         }
 
-        public static double TotalAmountFor(Invoice invoice, Dictionary<string, Play> plays)
+        public static double TotalAmountFor(StatementData data)
         {
             var result = 0.0;
-            foreach (var perf in invoice.Performances)
+            foreach (var perf in data.Invoice.Performances)
             {
-                result += AmountFor(perf, plays);
+                result += AmountFor(perf, data.Plays);
             }
             return result;
         }
 
-        public static double TotalVolumeCreditsFor(Invoice invoice, Dictionary<string, Play> plays)
+        public static double TotalVolumeCreditsFor(StatementData data)
         {
             var result = 0.0;
-            foreach (var perf in invoice.Performances)
+            foreach (var perf in data.Invoice.Performances)
             {
-                result += VolumeCreditsFor(perf, plays);
+                result += VolumeCreditsFor(perf, data.Plays);
             }
             return result;
         }
